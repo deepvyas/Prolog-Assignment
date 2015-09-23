@@ -32,8 +32,8 @@ my_sub(X,Y) :- int(X),int(Y);my_float(X),my_float(Y);int(address(X)),int(address
 				bitset(address(X)),bitset(address(Y)).
 my_mul(X,Y) :- int(X),int(Y);my_float(X),my_float(Y);address(X),address(Y).
 my_modulo(X,Y) :- int(X),int(Y);my_float(X),my_float(Y);int(X),my_float(Y);my_float(X),int(Y).
-my_rightshift(X,Y) :- bitset(X), int(Y).
-my_leftshift(X,Y) :- bitset(X), int(Y).
+my_right_shift(X,Y) :- bitset(X), int(Y).
+my_left_shift(X,Y) :- bitset(X), int(Y).
 my_greater(X,Y) :- int(X),int(Y);my_float(X),my_float(Y).
 my_greater_or_equal(X,Y) :- int(X),int(Y); my_float(X),my_float(Y).
 my_less(X,Y) :- int(X),int(Y);my_float(X),my_float(Y).
@@ -46,14 +46,38 @@ equals(X,Y) :- sameType(X,Y).
 sameType(EX,EY):- int(EX),int(EY);boolean(EX),boolean(EY);my_float(EX),my_float(EY);bitset(EX),bitset(EY);int(address(EX)),int(address(EY));my_float(address(EX)),my_float(address(EY));
 				boolean(address(EX)),boolean(address(EY));bitset(address(EX)),bitset(address(EY)).
 
+bit_and(X,Y) :- bitset(X),bitset(Y); int(X),int(Y); my_float(X),my_float(Y); int(X),my_float(Y); int(Y),my_float(X).
+bit_and_equals(X,Y) :- equals(X,bit_and(X,Y)).
+bit_or(X,Y) :- bitset(X),bitset(Y);int(X),int(Y); my_float(X),my_float(Y); int(X),my_float(Y); int(Y),my_float(X).
+bit_or_equals(X,Y) :- equals(X,bit_or(X,Y)).
+bit_not(X) :- bitset(X); int(X); my_float(Y).
+
+% my_plus_equals(X,Y) :- int(X),int(Y);my_float(X),my_float(Y);int(address(X)),int(Y);
+% 					my_float(address(X)),int(Y);boolean(address(X)),int(Y);
+% 					bitset(address(X)),int(Y).
+my_plus_equals(X,Y):-equals(X,my_plus(X,Y)).
+
+%my_mul_equals(X,Y) :- int(X),int(Y);my_float(X),my_float(Y).
+my_mul_equals(X,Y):-equals(X,my_mul(X,Y)).
+%my_div_equals(X,Y) :- int(X),int(Y);my_float(X),my_float(Y).
+my_div_equals(X,Y):-equals(X,my_div(X,Y)).
+%my_sub_equals(X,Y) :- int(X),int(Y);my_float(X),my_float(Y).
+my_sub_equals(X,Y):-equals(X,my_sub(X,Y)).
+%my_left_shift_equals(X,Y) :- bitset(X),int(Y).
+my_left_shift_equals(X,Y) :- equals(X,my_left_shift(X,Y)).
+%my_right_shift_equals(X,Y) :- bitset(X),int(Y).
+my_right_shift_equals(X,Y) :- equals(X,my_right_shift(X,Y)).
 bitset(address(bi)).
 bitset(c).
 bitset(d).
-bitset(my_right_shift(X,Y)) :- bitset(X),int(Y).
-bitset(my_left_shift(X,Y)) :- bitset(X),int(Y).
+bitset(my_right_shift(X,Y)) :- bitset(X),int(Y); int(X),int(Y); my_float(X),int(Y).
+bitset(my_left_shift(X,Y)) :- bitset(X),int(Y); int(X),int(Y); my_float(X),int(Y).
 bitset(address(my_addof(X))) :- bitset(X).
 bitset(address(my_plus(X,Y))) :- bitset(address(X)),int(Y);bitset(address(Y)),int(X).
 bitset(value_of(X)) :- bitset(address(X)).
+bitset(bit_and(X,Y)) :- bitset(X),bitset(Y); int(X),int(Y); my_float(X),my_float(Y); int(X),my_float(Y); int(Y),my_float(X).
+bitset(bit_or(X,Y)) :- bitset(X),bitset(Y);int(X),int(Y); my_float(X),my_float(Y); int(X),my_float(Y); int(Y),my_float(X).
+bitset(bit_not(X)) :- bitset(X); int(X); my_float(X).
 
 boolean(true).
 boolean(false).
@@ -73,3 +97,5 @@ boolean(address(my_plus(X,Y))) :- boolean(address(X)),int(Y);boolean(address(Y))
 boolean(value_of(X)) :- boolean(address(X)).
 
 %equals(my_sub(my_addof(daivik),my_plus(de,my_addof(smit))),deep).
+%pls donot nest assignment operators.
+
