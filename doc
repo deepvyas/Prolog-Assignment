@@ -1,0 +1,78 @@
+Welcome to the most awesome type checker there ever existed in the history of the universe.
+
+How to use the most awesome type checker there ever existed in the history of the universe:
+	
+	Set of types = {int, double, boolean, bitset}
+	Additional pseudo-type = {address}.
+
+	====== Variable Declaration ======
+
+	To declare a variable of type T, add a line in the rule base as follows:
+
+		T(var_name).
+
+	T can be any one of the types supported except address type (Refer the Set of supported types).
+	
+	To declare an address variable of type T:
+
+		T(address(var_name)).
+
+	==================================
+
+	====== How to give inputs at the prompt ======
+
+	List of functors:
+
+	X+Y : my_plus(X,Y)
+	X-Y : my_sub(X,Y)
+	X/Y : my_div(X,Y)
+	X*Y : my_mul(X,Y)
+	X%Y : my_modulo(X,Y)
+
+	X<<Y : my_left_shift(X,Y)
+	X>>Y : my_right_shift(X,Y)
+	X&Y : bit_and(X,Y)
+	X|Y : bit_or(X,Y)
+	~X : bit_not(X)
+
+	X&&Y : my_and(X,Y)
+	X||Y : my_or(X,Y)
+	!X : my_not(X)
+
+	X>Y : my_greater(X,Y)
+	X<Y : my_less(X,Y)
+	X>=Y : my_greater_or_equal(X,Y)
+	X<=Y : my_less_or_equal(X,Y)
+	X==Y : my_equal_equal(X,Y)
+	X!=Y : my_not_equal(X,Y)
+
+	X=Y : equals(X,Y)
+	X+=Y : my_plus_equals(X,Y)
+	X-=Y : my_sub_equals(X,Y)
+	X*=Y : my_mul_equals(X,Y)
+	X/=Y : my_div_equals(X,Y)
+	X<<=Y : my_left_shift_equals(X,Y)
+	X>>=Y : my_right_shift_equals(X,Y)
+
+	&X : my_addof(X)  // address of X
+	*X : value_of(X)  // value at X
+
+	X?Y:Z  :  ternary_cond(X,Y,Z)
+
+	where X and Y can themselves be complex statements (Ex X = my_plus(3,4) and Y = my_sub(12,32). Refer Example Section for further clarification.)
+
+	1. Suppose we have to check the type correctness of the expression:
+
+					(a + b - c*3.0)/2 where a, b and c are of types T1, T2 and T3 respectively. Each of T1, T2 and T3 can be any one of the types supported (refer the Set of types).
+
+		Q) How to specify the types T1, T2 and T3?
+
+		Ans. Suppose T1 is integer, T2 is double and T3 is boolean. We would specify the types of a,b and c in the rule base (in the space reserved for variables of the respective types). The syntax of this specification would be as follows:
+
+				int(a).
+
+				double(b).
+
+				boolean(c).
+
+		Q) How to 
