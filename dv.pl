@@ -270,7 +270,7 @@ my_right_shift_equals(X,Y) :-
 	equals(X,my_right_shift(X,Y)).
 
 ternary_cond(Z,X,Y):-
-	((int(X);integer(X)),(int(Y);integer(Y));
-		(double(X);float(X)),(double(Y);float(Y));
-		boolean(X),boolean(Y);
-		bitset(X),bitset(Y)),boolean(Z).
+	((int(X);integer(X);int(address(X)))),(int(Y);integer(Y);int(address(Y)));
+		(double(X);float(X);double(address(X))),(double(Y);float(Y);double(address(Y)));
+		(boolean(X);boolean(address(X))),(boolean(Y);boolean(address(Y)));
+		(bitset(X);bitset(address(X))),(bitset(Y);bitset(address(Y))),boolean(Z).
