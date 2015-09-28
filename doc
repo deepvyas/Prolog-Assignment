@@ -3,7 +3,6 @@ Welcome to the most awesome type checker there ever existed in the history of th
 How to use the most awesome type checker there ever existed in the history of the universe:
 	
 	Set of types = {int, double, boolean, bitset}
-	Additional pseudo-type = {address}.
 
 	====== Variable Declaration ======
 
@@ -11,11 +10,11 @@ How to use the most awesome type checker there ever existed in the history of th
 
 		T(var_name).
 
-	T can be any one of the types supported except address type (Refer the Set of supported types).
+	T can be any one of the types supported (Refer: Set of types).
 	
 	To declare an address variable of type T:
 
-		T(address(var_name)).
+		T(value_at(var_name)).
 
 	==================================
 
@@ -55,15 +54,26 @@ How to use the most awesome type checker there ever existed in the history of th
 	X>>=Y : my_right_shift_equals(X,Y)
 
 	&X : my_addof(X)  // address of X
-	*X : value_of(X)  // value at X
+	*X : value_at(X)  // value at X
 
-	X?Y:Z  :  ternary_cond(X,Y,Z)
+	X?Y:Z  :  if_else(X,Y,Z)
+	where X and Y can themselves be complex statements (Ex X = my_plus(3,4) and Y = my_sub(12,32).
 
-	where X and Y can themselves be complex statements (Ex X = my_plus(3,4) and Y = my_sub(12,32). Refer Example Section for further clarification.)
+Assumptions used to make the most awesome type checker there ever existed in the history of the universe:
+	1. If value_at a address is undefined the output will be false
+		ex. ?- equals(x ,value_at(my_plus(my_addof(x),x))).
+			false.
+
+			here x is integer.
+			This returns false because value_at memory address of x incremented by x is undefined .
+
+	2. Bitset operations are defined on int and float data types but the return type of such operations is assumed to be bitset itself(i.e neither int nor float).
+
+
 
 	1. Suppose we have to check the type correctness of the expression:
 
-					(a + b - c*3.0)/2 where a, b and c are of types T1, T2 and T3 respectively. Each of T1, T2 and T3 can be any one of the types supported (refer the Set of types).
+					(a + b - c*3.0)/2 where a, b and c are of types T1, T2 and T3 respectively. Each of T1, T2 and T3 can be any one of the types supported (Refer: Set of types).
 
 		Q) How to specify the types T1, T2 and T3?
 
@@ -75,4 +85,80 @@ How to use the most awesome type checker there ever existed in the history of th
 
 				boolean(c).
 
-		Q) How to 
+		Q) How to give input at prompt?
+
+		Ans. Make a parse tree for above equation and start adding the functors from top to bottom in parse tree.
+			The prompt input for above expression will be:-
+			?- my_div(my_plus(a,my_sub(b,my_mul(c,3.0))),2).
+			false.
+
+			The output will be false for above expression as a,b,c are different types.
+
+		======= EXAMPLES =======
+
+			int(x).
+			double(y).
+			bitset(d).
+			boolean(true).
+
+				1. x+y
+
+				?- my_plus(x,x).
+				true.
+
+				2. x>=y
+
+				?- my_greater_or_equal(x,y).
+				false.
+
+				3. x = x*y
+
+				?- equals(x,my_mul(x,y)).
+				false.
+
+				4. x = x*x
+
+				?- equals(x,my_mul(x,x)).
+				true.
+
+				5. d|d
+
+				?- bit_or(d,d).
+				true.
+
+				6. true ? (x+=x) : (&y-&y)
+
+				?- if_else(true,my_plus_equals(x,x),my_sub(my_addof(y),my_addof(y))).
+				true.
+
+				7. false ? (&x) : (&y + x) 
+
+				?- if_else(false,my_addof(x),my_plus(my_addof(y),x)).
+				true.
+
+		=======================
+
+?- my_plus(deep,deep).
+true ;
+false.
+
+?- my_greater_or_equal(deep,smit).
+false.
+
+?- equals(deep,my_mul(deep,depp)).
+false.
+
+?- equals(deep,my_mul(deep,deep)).
+true ;
+false.
+
+?- bit_or(d,d).
+true ;
+false.
+
+?- if_else(true,my_plus_equals(deep,deep),my_sub(my_addof(smit),my_addof(smit))).
+true ;
+false.
+
+?- if_else(false,my_addof(deep),my_plus(my_addof(smit),deep)).
+false.
